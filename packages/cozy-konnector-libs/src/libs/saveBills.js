@@ -1,6 +1,5 @@
 /**
- * Encapsulate the saving of Bills : saves the files, saves the new data, and associate the files
- * to an existing bank operation
+ * Encapsulate the saving of Bills : saves the files, saves the new data
  *
  * @module saveBills
  */
@@ -10,7 +9,6 @@ const saveFiles = require('./saveFiles')
 const hydrateAndFilter = require('./hydrateAndFilter')
 const addData = require('./addData')
 const log = require('cozy-logger').namespace('saveBills')
-const linkBankOperations = require('./linkBankOperations')
 const DOCTYPE = 'io.cozy.bills'
 const _ = require('lodash')
 
@@ -21,11 +19,11 @@ const requiredAttributes = {
 }
 
 /**
- * Combines the features of `saveFiles`, `hydrateAndFilter`, `addData` and `linkBankOperations` for a
+ * Combines the features of `saveFiles`, `hydrateAndFilter` and `addData` for a
  * common case: bills.
  * Will create `io.cozy.bills` objects. The default deduplication keys are `['date', 'amount', 'vendor']`.
- * You need the full permission on `io.cozy.bills`, full permission on `io.cozy.files` and also
- * full permission on `io.cozy.bank.operations` in your manifest, to be able to use this function.
+ * You need the full permission on `io.cozy.bills` and full permission on `io.cozy.files`
+ * in your manifest, to be able to use this function.
  *
  * Parameters:
  *
@@ -36,7 +34,7 @@ const requiredAttributes = {
  *   You can also pass attributes expected by `saveFiles`
  *   Please take a look at [io.cozy.bills doctype documentation](https://github.com/cozy/cozy-doctypes/blob/master/docs/io.cozy.bills.md)
  * - `fields` (object) this is the first parameter given to BaseKonnector's constructor
- * - `options` is passed directly to `saveFiles`, `hydrateAndFilter`, `addData` and `linkBankOperations`.
+ * - `options` is passed directly to `saveFiles`, `hydrateAndFilter` and `addData`.
  *
  * @example
  *
@@ -46,9 +44,7 @@ const requiredAttributes = {
  * module.exports = new BaseKonnector(function fetch (fields) {
  *   const documents = []
  *   // some code which fills documents
- *   return saveBills(documents, fields, {
- *     identifiers: ['vendor']
- *   })
+ *   return saveBills(documents, fields)
  * })
  * ```
  *
@@ -67,7 +63,6 @@ module.exports = async (entries, fields, options = {}) => {
   // Deduplicate on this keys
   options.keys = options.keys || Object.keys(requiredAttributes)
 
-  const originalEntries = entries
   options.shouldUpdate = (entry, dbEntry) => entry.invoice !== dbEntry.invoice
 
   let tempEntries = entries
@@ -106,12 +101,6 @@ module.exports = async (entries, fields, options = {}) => {
 
   tempEntries = await hydrateAndFilter(tempEntries, DOCTYPE, options)
   tempEntries = await addData(tempEntries, DOCTYPE, options)
-  tempEntries = await linkBankOperations(
-    originalEntries,
-    DOCTYPE,
-    fields,
-    options
-  )
   return tempEntries
 }
 
