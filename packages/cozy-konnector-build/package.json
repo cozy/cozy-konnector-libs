@@ -7,6 +7,7 @@
     "type": "git",
     "url": "git+https://github.com/konnectors/libs.git"
   },
+  "private": true,
   "license": "MIT",
   "homepage": "https://github.com/cozy/cozy-konnector-libs#readme",
   "scripts": {
