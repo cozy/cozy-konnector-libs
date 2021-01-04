@@ -7,7 +7,6 @@
     "type": "git",
     "url": "git+https://github.com/konnectors/libs.git"
   },
-  "private": true,
   "license": "MIT",
   "homepage": "https://github.com/cozy/cozy-konnector-libs#readme",
   "scripts": {
@@ -19,7 +18,6 @@
   "dependencies": {
     "copy-webpack-plugin": "7.0.0",
     "cozy-app-publish": "0.26.0",
-    "cozy-jobs-cli": "^1.15.4",
     "eslint-config-cozy-app": "2.0.0",
     "git-directory-deploy": "1.5.1",
     "husky": "4.3.6",
