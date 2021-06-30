@@ -38,7 +38,7 @@
   "devDependencies": {
     "eslint-config-cozy-app": "2.1.0",
     "eslint-plugin-jsdoc": "35.1.2",
-    "jest": "27.0.3",
+    "jest": "27.0.6",
     "lerna": "4.0.0"
   },
   "eslintConfig": {
